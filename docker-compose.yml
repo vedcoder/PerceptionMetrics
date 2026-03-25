@@ -1,0 +1,16 @@
+services:
+  app:
+    build: .
+    # Use linux/amd64 on Apple Silicon — open3d has no ARM64 wheel
+    platform: linux/amd64
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./examples/local/data:/app/examples/local/data
+      - ./examples/local/outputs:/app/examples/local/outputs
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

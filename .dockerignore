@@ -1,0 +1,14 @@
+.git
+.venv
+dist
+docs
+local
+third_party
+additional_envs
+__pycache__
+*.pyc
+.DS_Store
+.mypy_cache
+.ipynb_checkpoints
+examples/local
+*.egg-info
