@@ -175,6 +175,36 @@ pm_evaluate segmentation image --model_format torch --model /path/to/model.pt --
 pm_evaluate detection image --model_format torch --model /path/to/model.pt --model_ontology /path/to/ontology.json --model_cfg /path/to/cfg.json --dataset_format coco --dataset_dir /path/to/coco/dataset --out_fname /path/to/results.csv
 ```
 
+## Docker
+
+You can run the PerceptionMetrics GUI inside a Docker container without any local Python setup.
+
+### Build and run
+
+```bash
+docker build -t perceptionmetrics .
+docker run -p 8501:8501 -v ./data:/app/examples/local/data perceptionmetrics
+```
+
+Or with Docker Compose:
+
+```bash
+docker compose up
+```
+
+Then open http://localhost:8501
+
+> **Apple Silicon users:** open3d does not publish ARM64 wheels, so the container must run under amd64 emulation:
+> ```bash
+> docker build --platform linux/amd64 -t perceptionmetrics .
+> ```
+
+### Known challenges
+
+- **Apple Silicon performance**: Since open3d has no ARM64 wheel, Apple Silicon users must run the container with `--platform linux/amd64` (Rosetta/QEMU emulation), which is noticeably slower than native execution.
+- **Dataset folder browsing**: The "Browse" button in the sidebar relies on `osascript` (macOS) / `zenity` (Linux) to open a native file dialog, which does not work inside a headless Docker container. Users must type or paste the dataset path directly into the text input field instead.
+- **File upload performance**: Uploading model `.pt` files and ontology files through Streamlit's file uploader is slower when running in Docker compared to running locally, due to the emulation and network overhead between the browser and container.
+
 <h1 id="DetectionMetrics">DetectionMetrics</h1>
 
 Our previous release, ***DetectionMetrics***, introduced a versatile suite focused on object detection, supporting cross-framework evaluation and analysis. [Cite our work](#cite) if you use it in your research!
